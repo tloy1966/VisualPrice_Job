@@ -5,9 +5,6 @@ using System.IO;
 using System.Data;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
-using System.Threading.Tasks;
-using NPOI;
-using NPOI.HSSF;
 using System.Text.RegularExpressions;
 namespace VisualPrice_Job.Helpers
 {
@@ -23,7 +20,7 @@ namespace VisualPrice_Job.Helpers
             foreach (var path in lstXlsPath)
             {
                 string _path = path;
-                var dt = e.Read(_path);
+                var dt = Read(_path);
                 if (dt ==null)
                 {
                     continue;
@@ -37,7 +34,7 @@ namespace VisualPrice_Job.Helpers
             return lstTables;
         }
 
-        private DataTable Read(string _path)
+        static private DataTable Read(string _path)
         {
             DataTable dt = new DataTable();
             HSSFWorkbook wk;
