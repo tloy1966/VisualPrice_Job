@@ -18,14 +18,17 @@ namespace VisualPrice_Job
         {
             try
             {
+                logger.Info("Start Task:");
                 var task = Task<List<string>>.Factory.StartNew(
                     () => Helpers.FileHelper.GetFilesPath(Enums.Parameters.GetXlsFolder(), Enums.Parameters.strXLSFilter))
                     .ContinueWith<List<DataTable>>(t => Helpers.ExcelHelper.ReadXLS(t.Result))
                     .ContinueWith(t=>Helpers.DBHelper.InsertData(t.Result));
+                logger.Info("End Task");
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
+                logger.Error(ex.InnerException);
             }
         }
     }
