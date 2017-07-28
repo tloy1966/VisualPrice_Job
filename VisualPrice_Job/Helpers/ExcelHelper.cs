@@ -8,7 +8,7 @@ namespace VisualPrice_Job.Helpers
 {
     public class ExcelHelper
     {
-        static public List<DataTable> ReadXLS(string strXlsPath, bool isTest, Enums.Parameters.InsertDBMode mode)
+        static public List<DataTable> ReadXLS(List<string> strXlsPath, bool isTest, Enums.Parameters.InsertDBMode mode)
         {
             List<DataTable> lstTables = new List<DataTable>();
             return lstTables;
