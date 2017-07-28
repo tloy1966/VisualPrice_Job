@@ -20,11 +20,6 @@ namespace VisualPrice_Job.Enums
 #endif
             return strXLSFolder;
         }
-        public enum InsertDBMode
-        {
-            OneByOne = 0,
-            Bulk = 1
-        }
 
         public enum DBCol
         {
