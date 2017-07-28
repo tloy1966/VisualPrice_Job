@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace VisualPrice_Job.Enums
 {
     static public class Parameters
     {
-        static public string strXLSFolder = @"D:\7RealPrice";
+        static private string strXLSFolder = @"D:\7RealPrice";
         static public string strXLSFilter = ".xls";
+
+        static public string GetXlsFolder()
+        {
+#if DEBUG
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Data", "TestXls");
+            strXLSFolder = path;
+#else
+            strXLSFolder = @"D:\7RealPrice";
+#endif
+            return strXLSFolder;
+        }
         public enum InsertDBMode
         {
             OneByOne = 0,
@@ -57,7 +67,7 @@ namespace VisualPrice_Job.Enums
             ID2 = 28,
             isActive = 29
 
-            #region Others
+#region Others
             /*Furniture_C = 21,
             TPRICE_C = 22,
             UPRICE_C = 23,
@@ -67,7 +77,7 @@ namespace VisualPrice_Job.Enums
             RMNOTE_C = 27,
             ID2_C = 28,
             isActive_C = 29*/
-            #endregion
+#endregion
 
         }
     }

@@ -19,7 +19,7 @@ namespace VisualPrice_Job
             try
             {
                 var task = Task<List<string>>.Factory.StartNew(
-                    () => Helpers.FileHelper.GetFilesPath(Enums.Parameters.strXLSFolder, Enums.Parameters.strXLSFilter))
+                    () => Helpers.FileHelper.GetFilesPath(Enums.Parameters.GetXlsFolder(), Enums.Parameters.strXLSFilter))
                     .ContinueWith<List<DataTable>>(t => Helpers.ExcelHelper.ReadXLS(t.Result))
                     .ContinueWith(t=>Helpers.DBHelper.InsertData(t.Result));
             }
