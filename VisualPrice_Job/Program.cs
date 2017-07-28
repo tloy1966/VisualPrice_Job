@@ -8,7 +8,7 @@ namespace VisualPrice_Job
 {
     class Program
     {
-        static Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        static public Logger logger = NLog.LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
             DoWork();
