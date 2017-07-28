@@ -8,6 +8,8 @@ namespace VisualPrice_Job.Enums
 {
     static public class Parameters
     {
+        static public string strXLSFolder = @"D:\7RealPrice";
+        static public string strXLSFilter = ".xls";
         public enum InsertDBMode
         {
             OneByOne = 0,

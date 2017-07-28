@@ -19,8 +19,8 @@ namespace VisualPrice_Job
             try
             {
                 var task = Task<List<string>>.Factory.StartNew(
-                    () => Helpers.FileHelper.GetFilesPath(Helpers.FileHelper.strXLSFolder, ".xls").OrderBy(o => o).ToList())
-                    .ContinueWith<List<DataTable>>(t => Helpers.ExcelHelper.ReadXLS(t.Result, true, Enums.Parameters.InsertDBMode.Bulk))
+                    () => Helpers.FileHelper.GetFilesPath(Enums.Parameters.strXLSFolder, Enums.Parameters.strXLSFilter))
+                    .ContinueWith<List<DataTable>>(t => Helpers.ExcelHelper.ReadXLS(t.Result))
                     .ContinueWith(t=>Helpers.DBHelper.InsertData(t.Result));
             }
             catch (Exception ex)

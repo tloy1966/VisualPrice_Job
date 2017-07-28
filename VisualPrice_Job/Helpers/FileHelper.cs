@@ -7,6 +7,7 @@ namespace VisualPrice_Job.Helpers
 {
     public class FileHelper
     {
+        //Map before multiple task
         static public List<string> GetFilesPath(string strFolder, string strFilter)
         {
             if (!Directory.Exists(strFolder))
@@ -26,9 +27,10 @@ namespace VisualPrice_Job.Helpers
                     }
                 }
             }
+            lstFiles = lstFiles.OrderBy(o => o).ToList();
             return lstFiles;
         }
 
-        static public string strXLSFolder = @"D:\7RealPrice";
+        
     }
 }
