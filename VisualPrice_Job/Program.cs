@@ -14,7 +14,7 @@ namespace VisualPrice_Job
             DoWork();
         }
 
-        static void DoWork()
+        static void DoWorkTask()
         {
             try
             {
@@ -30,6 +30,12 @@ namespace VisualPrice_Job
                 logger.Error(ex);
                 logger.Error(ex.InnerException);
             }
+        }
+        static void DoWork()
+        {
+            var lstFiles = Helpers.FileHelper.GetFilesPath(Enums.Parameters.GetXlsFolder(), Enums.Parameters.strXLSFilter);
+            var lstTables = Helpers.ExcelHelper.ReadXLS(lstFiles);
+            Helpers.DBHelper.InsertData(lstTables);
         }
     }
 }

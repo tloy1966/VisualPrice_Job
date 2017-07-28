@@ -13,7 +13,7 @@ namespace VisualPrice_Job.Enums
         static public string GetXlsFolder()
         {
 #if DEBUG
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "Data", "TestXls");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Data");
             strXLSFolder = path;
 #else
             strXLSFolder = @"D:\7RealPrice";

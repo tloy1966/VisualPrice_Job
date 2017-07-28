@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.IO;
 using System.Data;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using System.Threading.Tasks;
+using NPOI;
+using NPOI.HSSF;
 using System.Text.RegularExpressions;
 namespace VisualPrice_Job.Helpers
 {
@@ -16,29 +18,37 @@ namespace VisualPrice_Job.Helpers
 
         static public List<DataTable> ReadXLS(List<string> lstXlsPath)
         {
+            ExcelHelper e = new ExcelHelper();
             List<DataTable> lstTables = new List<DataTable>();
             foreach (var path in lstXlsPath)
             {
                 string _path = path;
-                Task.Factory.StartNew(
-                    ()=> {
-                        lstTables.Add(Read(_path));
-                    },TaskCreationOptions.AttachedToParent | TaskCreationOptions.LongRunning);
+                var dt = e.Read(_path);
+                if (dt ==null)
+                {
+                    continue;
+                }
+                if (dt.Rows.Count == 0)
+                {
+                    continue;
+                }
+                lstTables.Add(dt);
             }
             return lstTables;
         }
 
-        static private DataTable Read(string _path)
+        private DataTable Read(string _path)
         {
-            DataTable dt;
+            DataTable dt = new DataTable();
             HSSFWorkbook wk;
             ISheet sheet = null;
-            using (FileStream fs = new FileStream(_path, FileMode.Open, FileAccess.ReadWrite))
-            {
-                wk = new HSSFWorkbook(fs);
-            }
+            
             try
             {
+                using (FileStream fs = new FileStream(_path, FileMode.Open, FileAccess.Read))
+                {
+                    wk = new HSSFWorkbook(fs);
+                }
                 if (wk.GetSheet("不動產買賣") != null)
                 {
                     sheet = wk.GetSheet("不動產買賣");//預售屋買賣 不動產租賃
@@ -55,23 +65,33 @@ namespace VisualPrice_Job.Helpers
                 {
                     return null;
                 }
-                Console.WriteLine("Processing");
+                Console.WriteLine($"Processing {Path.GetFileName(_path)}");
+                dt = ReadExcelFile(sheet, _path);
+                /*Task t =  Task.Factory.StartNew(
+                    () => {
+                        
+                    }, TaskCreationOptions.AttachedToParent | TaskCreationOptions.LongRunning);
+                 */
 
-                dt =  ReadExcelFile(sheet, _path);
             }
             catch (Exception ex)
             {
                 dt = null;
                 //then copy this file to another folder, and check
+                Console.WriteLine(ex.Message);
             }
             return dt;
         }
 
         static private DataTable ReadExcelFile(ISheet sheet, string strXlsPath)
         {
+            var CityCodeAndSellType = GetCityandTypeCode(strXlsPath);
+            if (CityCodeAndSellType == null)
+            {
+                return null;
+            }
             DataTable dt = Models.MainData.CreateMainData();
 
-            var CityCodeAndSellType = GetCityandTypeCode(strXlsPath);
             for (int i = 2; i <= sheet.LastRowNum; i++)
             {
                 var nowRow = sheet.GetRow(i);

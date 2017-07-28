@@ -39,7 +39,7 @@ namespace VisualPrice_Job.Helpers
             {
                 if (val.Length > 7 || val.Length < 6)
                 {
-                    Console.WriteLine($"{val} datetime convert error");
+                    Console.Write($"{val} datetime convert error.  ");
                     return DBNull.Value;
                 }
                 DateTime dt;
