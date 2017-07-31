@@ -4,26 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using NLog;
+using System.Diagnostics;
 namespace VisualPrice_Job
 {
     class Program
     {
         static public Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        static Stopwatch sw = new Stopwatch();
         static void Main(string[] args)
         {
-            DoWork();
+            DoWorkTask();
+            Console.Read();
         }
 
         static void DoWorkTask()
         {
             try
             {
-                logger.Info("Start Task:");
+                sw.Reset();
+                sw.Start();
                 var task = Task<List<string>>.Factory.StartNew(
                     () => Helpers.FileHelper.GetFilesPath(Enums.Parameters.GetXlsFolder(), Enums.Parameters.strXLSFilter))
                     .ContinueWith<List<DataTable>>(t => Helpers.ExcelHelper.ReadXLS(t.Result))
                     .ContinueWith(t=>Helpers.DBHelper.InsertData(t.Result));
-                logger.Info("End Task");
+                task.Wait();
+                sw.Stop();
+                Console.WriteLine();
+                Console.WriteLine(sw.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
@@ -33,9 +40,14 @@ namespace VisualPrice_Job
         }
         static void DoWork()
         {
+            sw.Reset();
+            sw.Start();
             var lstFiles = Helpers.FileHelper.GetFilesPath(Enums.Parameters.GetXlsFolder(), Enums.Parameters.strXLSFilter);
-            var lstTables = Helpers.ExcelHelper.ReadXLS(lstFiles);
+            var lstTables = Helpers.ExcelHelper.Read(lstFiles);
             Helpers.DBHelper.InsertData(lstTables);
+            sw.Stop();
+            Console.WriteLine(sw.ElapsedMilliseconds);
+            lstTables.ForEach(t => Console.WriteLine(t.TableName));
         }
     }
 }

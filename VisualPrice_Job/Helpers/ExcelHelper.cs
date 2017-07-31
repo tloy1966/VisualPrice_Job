@@ -5,6 +5,7 @@ using System.IO;
 using System.Data;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 namespace VisualPrice_Job.Helpers
 {
@@ -15,21 +16,57 @@ namespace VisualPrice_Job.Helpers
 
         static public List<DataTable> ReadXLS(List<string> lstXlsPath)
         {
-            ExcelHelper e = new ExcelHelper();
             List<DataTable> lstTables = new List<DataTable>();
             foreach (var path in lstXlsPath)
             {
                 string _path = path;
-                var dt = Read(_path);
-                if (dt ==null)
+                Task.Factory.StartNew(() =>
                 {
-                    continue;
-                }
-                if (dt.Rows.Count == 0)
+                    try
+                    {
+                        HSSFWorkbook wk;
+                        using (FileStream fs = new FileStream(_path, FileMode.Open, FileAccess.Read))
+                        {
+                            wk = new HSSFWorkbook(fs);
+                        }
+
+                        ISheet sheet = wk.GetSheet("不動產買賣");
+
+                       var  dt = ReadExcelFile(sheet, _path);
+                        if (dt != null)
+                        {
+                            lstTables.Add(dt);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.logger.Error(ex);
+                    }
+                }, TaskCreationOptions.AttachedToParent | TaskCreationOptions.LongRunning);
+            }
+            return lstTables;
+        }
+
+        static public List<DataTable> Read(List<string> lstXlsPath)
+        {
+            List<DataTable> lstTables = new List<DataTable>();
+            foreach (var _path in lstXlsPath)
+            {
+                HSSFWorkbook wk;
+                using (FileStream fs = new FileStream(_path, FileMode.Open, FileAccess.Read))
                 {
-                    continue;
+                    wk = new HSSFWorkbook(fs);
                 }
-                lstTables.Add(dt);
+
+                ISheet sheet = wk.GetSheet("不動產買賣");
+                if (sheet == null) continue;
+
+                //DataTable dt = new DataTable(Path.GetFileName(_path));
+                var dt = ReadExcelFile(sheet, _path);
+                if (dt != null)
+                {
+                    lstTables.Add(dt);
+                }
             }
             return lstTables;
         }
@@ -60,20 +97,13 @@ namespace VisualPrice_Job.Helpers
                 }
                 else
                 {
-                    return null;
+                    return dt;
                 }
                 Console.WriteLine($"Processing {Path.GetFileName(_path)}");
                 dt = ReadExcelFile(sheet, _path);
-                /*Task t =  Task.Factory.StartNew(
-                    () => {
-                        
-                    }, TaskCreationOptions.AttachedToParent | TaskCreationOptions.LongRunning);
-                 */
-
             }
             catch (Exception ex)
             {
-                dt = null;
                 //then copy this file to another folder, and check
                 Console.WriteLine(ex.Message);
             }
@@ -193,7 +223,6 @@ namespace VisualPrice_Job.Helpers
 
                 if (string.IsNullOrEmpty(tempID2))
                 {
-                    Console.WriteLine("ID is null");
                     continue;
                 }
                 dt.Rows.Add(dr);

@@ -7,16 +7,16 @@ namespace VisualPrice_Job.Enums
 {
     static public class Parameters
     {
-        static private string strXLSFolder = @"D:\7RealPrice";
+        static private string strXLSFolder = @"D:\7.Other\Test";
         static public string strXLSFilter = ".xls";
 
         static public string GetXlsFolder()
         {
 #if DEBUG
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "Data");
-            strXLSFolder = path;
+            //string path = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+            strXLSFolder = @"D:\7.Other\Test";
 #else
-            strXLSFolder = @"D:\7RealPrice";
+            //strXLSFolder = @"D:\7RealPrice";
 #endif
             return strXLSFolder;
         }
