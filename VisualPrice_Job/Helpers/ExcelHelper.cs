@@ -7,12 +7,14 @@ using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using NLog;
 namespace VisualPrice_Job.Helpers
 {
     public class ExcelHelper
     {
         static Regex rgxFileName = new Regex(@"\b[A-Z]{1}_lvr_land_[A]{1}", RegexOptions.IgnoreCase);
         static Regex rgxCheckLetters = new Regex(@"^[a-zA-Z0-9]+$");
+        static public Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         static public List<DataTable> ReadXLS(List<string> lstXlsPath)
         {
@@ -40,7 +42,7 @@ namespace VisualPrice_Job.Helpers
                     }
                     catch (Exception ex)
                     {
-                        Program.logger.Error(ex);
+                        logger.Error(ex);
                     }
                 }, TaskCreationOptions.AttachedToParent | TaskCreationOptions.LongRunning);
             }

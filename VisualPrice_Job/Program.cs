@@ -14,7 +14,6 @@ namespace VisualPrice_Job
         static void Main(string[] args)
         {
             DoWorkTask();
-            Console.Read();
         }
 
         static void DoWorkTask()

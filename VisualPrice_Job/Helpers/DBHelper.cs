@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using NLog;
 namespace VisualPrice_Job.Helpers
 {
     public class DBHelper
     {
+        static public Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         static public void InsertData(List<DataTable> lstTable)
         {
             foreach (var dt in lstTable)
@@ -57,7 +60,7 @@ namespace VisualPrice_Job.Helpers
                     }
                     catch (Exception ex)
                     {
-                        Program.logger.Error($"Insert error: {ex}");
+                        logger.Error($"Insert error: {ex}");
                     }
                 }
             }

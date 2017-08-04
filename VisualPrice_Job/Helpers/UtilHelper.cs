@@ -20,7 +20,7 @@ namespace VisualPrice_Job.Helpers
                 }
                 else
                 {
-                    return DBNull.Value;
+                    return DBNull.Value; 
                 }
             }
             else if (inType == "decimal")
@@ -89,6 +89,14 @@ namespace VisualPrice_Job.Helpers
             {
                 return DBNull.Value;
             }
+        }
+    }
+
+    public static class ExtensionMathods
+    {
+        public static T CastTo<T>(this IConvertible obj)
+        {
+            return (T)Convert.ChangeType(obj, typeof(T));
         }
     }
 }
