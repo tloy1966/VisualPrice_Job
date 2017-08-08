@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Text.RegularExpressions;
+using VisualPrice_Job.Interface;
+using VisualPrice_Job.Util;
 namespace VisualPrice_Job.Helpers
 {
     public class FileHelper
@@ -20,8 +21,7 @@ namespace VisualPrice_Job.Helpers
             {
                 foreach (var file in subDir.GetFiles())
                 {
-                    var t = file.Extension;
-                    if (t.Equals(strFilter, StringComparison.OrdinalIgnoreCase))
+                    if (file.Extension.Equals(strFilter, StringComparison.OrdinalIgnoreCase))
                     {
                         lstFiles.Add(file.FullName);
                     }
@@ -30,7 +30,5 @@ namespace VisualPrice_Job.Helpers
             lstFiles = lstFiles.OrderBy(o => o).ToList();
             return lstFiles;
         }
-
-        
     }
 }
