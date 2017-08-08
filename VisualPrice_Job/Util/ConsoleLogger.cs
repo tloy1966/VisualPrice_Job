@@ -13,6 +13,7 @@ namespace VisualPrice_Job.Util
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine(message);
 
+
         }
 
         public void Info(string message)
